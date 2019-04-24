@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <div id="deadline-messadge">
+            Время истекло!
+        </div>
+        <div id="clockdiv">
+            <div>
+                <span class="days"></span>
+                <div class="smalltext">Дни</div>
+            </div>
+            <div>
+                <span class="hours"></span>
+                <div class="smalltext">Часы</div>
+            </div>
+            <div>
+                <span class="minutes"></span>
+                <div class="smalltext">Минуты</div>
+            </div>
+            <div>
+                <span class="seconds"></span>
+                <div class="smalltext">Секунды</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        //Получение оставшегося времени
+        function getTimeRemaining(endtime) {
+            var t = Date.parse(endtime) - Date.parse(new Date());
+            var seconds = Math.floor((t / 1000) % 60);
+            var minutes = Math.floor((t / 1000 / 60) % 60);
+            var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+            var days = Math.floor(t / (1000 * 60 * 60 * 24));
+            return {
+                total: t,
+                days: days,
+                hours: hours,
+                minutes: minutes,
+                seconds: seconds
+            };
+        }
+
+        function initializeClock(id, endtime) {
+            //Объявление переменных содержащих дни, часы, минуты и секунды
+            var clock = document.getElementById(id);
+            var daysSpan = clock.querySelector(".days");
+            var hoursSpan = clock.querySelector(".hours");
+            var minutesSpan = clock.querySelector(".minutes");
+            var secondsSpan = clock.querySelector(".seconds");
+
+            function updateClock() {
+                var t = getTimeRemaining(endtime);
+
+                if (t.total <= 0) {
+                    document.getElementById("clockdiv").className = "hidden";
+                    document.getElementById("deadline-messadge").className = "visible";
+                    clearInterval(timeinterval);
+                    return true;
+                }
+
+            daysSpan.innerHTML = t.days;
+            hoursSpan.innerHTML = ("0" + t.hours).slice(-2);
+            minutesSpan.innerHTML = ("0" + t.minutes).slice(-2);
+            secondsSpan.innerHTML = ("0" + t.seconds).slice(-2);
+            }
+
+            updateClock();
+            var timeinterval = setInterval(updateClock, 1000);
+        }
+
+        var deadline = new Date(Date.parse(new Date()) + 5 * 1000);     //Здесь выставляется колво дней, часов, минут и секунд
+        initializeClock("clockdiv", deadline);  //Запуск таймера
+    </script>
+</body>
+</html>
